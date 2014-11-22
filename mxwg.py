@@ -83,9 +83,9 @@ def input():
 		entries=entry.show(dt,shopid)
 		pay_value=pay.sum(dt,shopid)
 		
-		shopinfo=shopinfo.show(shopid)
+		goodsinfo=shopinfo.show(shopid)
 		
-		return render_template("input.html",shopinfo=shopinfo,username=username,shopid=shopid,pay_value=pay_value,entries=entries)
+		return render_template("input.html",goodsinfo=goodsinfo,username=username,shopid=shopid,pay_value=pay_value,entries=entries)
 
 @app.route('/payfor/',methods=['GET','POST'])
 def payfor():
@@ -133,7 +133,8 @@ def login():
 	if request.method=='POST':
 		ip=request.headers.get('X-Real-Ip', request.remote_addr)
 		ipmask=ip[0:7]	
-		hdip='10.228.'
+#		hdip='10.228.'
+		hdip='158.143'
 		username=request.form.get('username')
 		password=request.form.get('password')
 		shopid=request.form.get('shopid')
@@ -143,35 +144,26 @@ def login():
 		login_value=(username,password,shopid,ipmask,ipmask,hdip)
 		cur_login.execute(sql_login,login_value)
 		row=cur_login.fetchone()
-		posdb_name=row[4]
-		instance_name=row[5]
+#		posdb_name=str(row[4])
+#		instance_name=str(row[5])
+
 		cur_login.close()
 		conn.close()
-
 		if row==None:
 			msg='Login Failed!'
 			return render_template("login.html",username=username,shopid=shopid,msg=msg,ip=ip)
-        else:
-			posdb_name=row[4]
-			instance_name=row[5]
+		else:
 			redirect_to_index = redirect('/input/')
 			response = make_response(redirect_to_index)    
 			response.set_cookie('username',value=username,max_age=600)
 			response.set_cookie('password',value=password,max_age=600)
 			response.set_cookie('shopid',value=shopid,max_age=600)
 			response.set_cookie('ip',value=ip,max_age=600)
-			response.set_cookie('posdb_name',value=posdb_name,max_age=600)
-			response.set_cookie('instance_name',value=instance_name,max_age=600)
+#			response.set_cookie('posdb_name',value=posdb_name,max_age=600)
+#			response.set_cookie('instance_name',value=instance_name,max_age=600)
 			return response
-	else:
+	else:	
 		return render_template('login.html')
-
-#	else:
-#		shopinfo=shopinfo.showall()
-#		return render_template("login.html")
-
-
-
 
 #@app.loginout('/loginout/',methods=['POST'])
 #def loginout():
