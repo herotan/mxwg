@@ -1,0 +1,47 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>梦想王国收银登录</title>
+<!-- TemplateParam name="shopid" type="boolean" value="true" -->
+</head>
+
+<body>
+<form action="" method="post">
+
+<br>
+
+<fieldset>
+    <legend>梦想王国收银登录</legend>
+	<br>
+	请选择您所在的门店:
+	<select name="shopid">
+        		 <option value=j10b>太湖店</option>
+		         <option value=k01b>濮家店</option>
+	</select>
+	<br>
+	<br>
+	收银员编码:
+	<input type=text name="username" />
+	<br>
+	<br>
+	登录密码:
+	<input type=password name="password" /><br /><br />
+	
+	<input type=submit value="登录" />
+</fieldset>
+
+<br>
+<br>
+
+消息:<br>{{remsg}}
+{{username}}
+{{password}}
+{{shopid}}
+{{msg}}
+{{ip}}
+
+</form>
+</body>
+</html>
+
+

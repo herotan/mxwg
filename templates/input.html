@@ -1,0 +1,61 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>sales</title>
+<!-- TemplateParam name="goodsid" type="boolean" value="true" -->
+</head>
+
+<body>
+<form action="" method="post" name="">
+
+<br>
+
+<fieldset>
+    <legend>请输入当天的销售收入</legend>
+	<br>
+	商品编码:
+	<select name="goodsid">
+        		 <option value=7107710 size=10>7107710</option>
+		         <option value=7107700 size=10>7107700</option>
+	</select>
+	<br>
+	<br>
+	销售金额:
+	<input type=text name="sales_amount" /><br /><br />
+	<input type=submit value="提交" />
+</fieldset>
+<br>
+
+<a href ='/payfor'>点此进入收银金额录入界面</a>
+
+
+<br>
+<br>
+<fieldset>
+<legend>预览提示框</legend>
+<br>尊敬的 {{username}} 欢迎登录到 {{shopid}} 店梦想王国收银系统. 您的登录IP为:{{ip}}
+<br>
+<br>
+消息:<br>{{remsg}}<br>
+当天销售总额:{{pay_value}}<br>
+<br>
+<table width="500" border="0" align="left" bordercolor="#F0F0F0" bgcolor="#CCCCCC">
+<tr>
+    <td><div align="center">日期</div></td><td><div align="center">时间</div></td>  <td><div align="center">商品编码</div></td><td><div align="center">金额</div></td>
+	</tr>
+
+	{% for entry in entries %}
+  <tr>
+    <td><div align="center">{{ entry.dt }}</div></td>
+    <td><div align="center">{{ entry.time }}</div></td>
+    <td><div align="center">{{entry.use_goodsno}}</div></td>
+    <td><div align="center">{{entry.item_value}}</div></td>
+  </tr>
+  {% endfor %}
+</table>
+</fieldset>
+</form>
+</body>
+</html>
+
+
