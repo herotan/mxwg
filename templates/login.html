@@ -12,33 +12,66 @@
 
 <fieldset>
     <legend>梦想王国收银登录</legend>
-	<br>
-	请选择您所在的门店:
-	<select name="shopid">
-        		 <option value=j10b>太湖店</option>
-		         <option value=k01b>濮家店</option>
-	</select>
-	<br>
-	<br>
-	收银员编码:
-	<input type=text name="username" />
-	<br>
-	<br>
-	登录密码:
-	<input type=password name="password" /><br /><br />
-	
-	<input type=submit value="登录" />
+<p>
+  <table width="400" height="30" border="0" cellspacing="10">
+    <tr>
+        <th scope="row"><div align="left">请选择您所在的门店:</div></th>
+        <td><div align="left">
+          <select name="shopid">
+            
+     
+        
+      
+{% for shop in myshop %}
+
+      
+        
+          
+            <option value={{shop.shopid}}> {{shop.mwid}}:{{shop.mwname}}</option>
+            
+          
+        
+      
+{% endfor %}
+
+shopid:{{shopid}}
+
+
+    
+      
+        
+          </select>
+        </div></td>
+      </tr>
+      <tr>
+        <th scope="row"><div align="left">收银员编码:</div></th>
+        <td><div align="left">
+          <input type=text name="username" />
+        </div></td>
+      </tr>
+      <tr>
+        <th scope="row"><div align="left">登录密码:</div></th>
+        <td><div align="left">
+          <input type=password name="password" />
+        </div></td>
+      </tr>
+    </table>
+	<p><input type=submit value="登录" />
+        </p>
 </fieldset>
 
 <br>
 <br>
-
-消息:<br>{{remsg}}
+<fieldset>
+    <legend>信息框</legend>
+<br>{{remsg}}
+<br>
 {{username}}
-{{password}}
 {{shopid}}
-{{msg}}
 {{ip}}
+<br>
+{{msg}}
+
 
 </form>
 </body>

@@ -11,8 +11,7 @@
 <br>
 
 <fieldset>
-    <legend>请输入当天的销售收入</legend>
-	<br>
+    <legend>请输入当天的收银总金额</legend>
 	<br>
 	销售金额:
 	<input type=text name="pay_amount" /><br /><br />
@@ -21,29 +20,29 @@
 <br>
 <br>
 
-<form action='/loginout/' method='post'>
-<input type=submit value="退出">
-</form>
-
-
-<br>
-<br>
 <fieldset>
 <legend>预览提示框</legend>
 <br>尊敬的 {{username}} 欢迎登录到 {{shopid}} 店梦想王国收银系统. 您的登录IP为:{{ip}}
 <br>
-消息:<br>{{remsg}}<br>
-{{r_pay}}
+{{remsg}}
 <br>
-当天销售总额:{{pay_value}}<br>
+
+</fieldset>
+<br>
+<br>
+</fieldset>
+</form>
+
+<fieldset>
+<legend>当日销售流水【当天销售总额:{{pay_value}}】</legend>
 <br>
 <table width="500" border="0" align="left" bordercolor="#F0F0F0" bgcolor="#CCCCCC">
-<tr>
-    <td><div align="center">日期</div></td><td><div align="center">时间</div></td>  <td><div align="center">商品编码</div></td><td><div align="center">金额</div></td>
+<tr bgcolor="#FF66FF">
+    <td height="30"> <div align="center">日期</div></td><td height="30"><div align="center">时间</div></td>  <td height="30"><div align="center">商品编码</div></td><td height="30"><div align="center">金额</div></td>
 	</tr>
 
 	{% for entry in entries %}
-  <tr>
+  <tr bgcolor="#FFCC99">
     <td><div align="center">{{ entry.dt }}</div></td>
     <td><div align="center">{{ entry.time }}</div></td>
     <td><div align="center">{{entry.use_goodsno}}</div></td>
@@ -51,8 +50,7 @@
   </tr>
   {% endfor %}
 </table>
-</fieldset>
-</form>
+
 </body>
 </html>
 
