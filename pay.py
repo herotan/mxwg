@@ -30,7 +30,7 @@ def pay_ins(dt,shopid,pay_amount):
 	pay_value=pay_amount
 	
 	reqtime=time.strftime('%H%M%S')
-	shopid=str(shopid)
+	shopid=str(shopid).upper()
 	sheetid=shopid+str(dt)+str(reqtime)
 	
 	db_name='mxwg.db'
