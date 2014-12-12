@@ -20,7 +20,8 @@ def input():
 	instance_name=str(request.cookies.get('instance_name'))
 
 	dt=time.strftime('%Y%m%d')
-
+	sale_sum=0
+	pay_sum=0
 	goodsinfo=shopinfo.showgoods(shopid.upper())
 
 	if request.method=='POST':
@@ -50,42 +51,56 @@ def input():
 		
 		goodscata=shopinfo.showgoodscata(shopid,goodsid)
 	
-#		goodsno=goodscata['goodsno']
 		groupno=str(goodscata[0])
 		deptno=str(goodscata[1])
 		goodsno=str(goodscata[2])
 
-#		if goodsid=='7107710':
-#			goodsno='2171077100011'
-#			groupno=56
-#		else:
-#			goodsno='2171077000014'
-#			groupno=58
-
 		sales_amount_input=request.form.get('sales_amount')
-		if sales_amount_input=='':
-			return render_template('input.html',goodsinfo=goodsinfo)
+	
+		def isNum(value):
+			try:
+				float(value) + 1
+			except ValueError:
+#				try:
+#					pass
+#				except TypeError:
+#					return False
+				return False
+
+		if sales_amount_input=='' or isNum(sales_amount_input)==False or float(sales_amount_input)<=0 or len(sales_amount_input)>9:
+			sales_amount=0
+			entries=entry.show(dt,shopid)
+			inputmsg="The input value not qualified"
+			sale_sum=pay.sum_sale(dt,shopid)	
+			pay_sum=pay.sum_pay(dt,shopid)
+			return render_template("input.html",inputmsg=inputmsg,pay_sum=pay_sum,sale_sum=sale_sum,username=username,shopid=shopid,sales_amount=sales_amount,time1=time1,dt=dt,ip=ip,entries=entries,goodsinfo=goodsinfo)
+		
 		sales_amount=float(sales_amount_input)
-        	
 		item_value=sales_amount
 		price=item_value
 		sheetid=str(shopid)+str(dt)+str(reqtime)
 		
 		sql_value=(shopid,1001,dt,time1,reqtime,listno,sublistno,pos_id,cashier_id,vgno,goodsno,placeno,groupno,deptno,amount,item_value,disc_value,vipdisc_value,item_type,v_type,disc_type,x,flag1,flag2,flag3,trainflag,price,use_goodsno,sheetid)
 		sale_j.ins(sql_value)
+		
+		
+		salemsg=os.popen('sh upload_sale.sh '+sheetid+' '+posdb_name+' '+instance_name).read()
+		
+		r_pay=pay.pay_ins(dt,shopid,item_value,sheetid)
+		paymsg=os.popen('sh upload_pay.sh '+sheetid+' '+posdb_name+' '+instance_name).read()
+		
 	
-		pay_value=pay.sum(dt,shopid)
+		pay_sum=pay.sum_pay(dt,shopid)
+		sale_sum=pay.sum_sale(dt,shopid)	
 		entries=entry.show(dt,shopid)
 		
-		remsg=os.popen('sh upload_sale.sh '+sheetid+' '+posdb_name+' '+instance_name).read()
-		return render_template("input.html",username=username,shopid=shopid,sales_amount=sales_amount,remsg=remsg,time1=time1,dt=dt,pay_value=pay_value,ip=ip,entries=entries,goodsinfo=goodsinfo)
-		cursor.close()
-		conn.close()
+		return render_template("input.html",username=username,shopid=shopid,sales_amount=sales_amount,paymsg=paymsg,time1=time1,dt=dt,pay_sum=pay_sum,sale_sum=sale_sum,ip=ip,entries=entries,goodsinfo=goodsinfo)
 	else:	
 		entries=entry.show(dt,shopid)
-		pay_value=pay.sum(dt,shopid)
-		
-		return render_template("input.html",goodsinfo=goodsinfo,username=username,shopid=shopid,pay_value=pay_value,entries=entries)
+		pay_sum=pay.sum_sale(dt,shopid)
+		sale_sum=pay.sum_sale(dt,shopid)	
+		return render_template("input.html",goodsinfo=goodsinfo,username=username,shopid=shopid,sale_sum=sale_sum,pay_sum=pay_sum,entries=entries,ip=ip)
+
 
 @app.route('/payfor/',methods=['GET','POST'])
 def payfor():
@@ -114,38 +129,44 @@ def payfor():
 
 		pay_amount=float(pay_amount)
 	
-		pay_value=pay.sum(dt,shopid)
+		pay_value=pay.sum_pay(dt,shopid)
 		entries=entry.show(dt,shopid)
 
-		r_pay=pay.pay_ins(dt,shopid,pay_amount)
-			
+		r_pay=pay.pay_ins(dt,shopid,pay_amount,sheetid)
 		remsg=os.popen('sh upload_pay.sh '+sheetid+' '+posdb_name+' '+instance_name).read()
 		return render_template("pay_input.html",username=username,shopid=shopid,pay_amount=pay_amount,dt=dt,pay_value=pay_value,ip=ip,entries=entries,r_pay=r_pay,remsg=remsg)
 	else:	
 		entries=entry.show(dt,shopid)
-		pay_value=pay.sum(dt,shopid)
+		pay_value=pay.sum_pay(dt,shopid)
 		return render_template("pay_input.html",username=username,shopid=shopid,pay_value=pay_value,entries=entries)
 
 
 
 @app.route('/',methods=['GET','POST'])
+
 def login():
 	myshop=shopinfo.showshop()
 	
 	if request.method=='POST':
 		ip=request.headers.get('X-Real-Ip', request.remote_addr)
 		ipmask=ip[0:7]	
-		hdip='10.228.'
-#		hdip='158.143'
+
+		viplist=['10.228','158.207','158.143']
+		for vip in viplist:
+			ipcheck=ip.find(vip)
+			if ipcheck==0:
+				ifvip=(ipcheck==0)
+				break
+			else:
+				ifvip=False
+				
 		username=request.form.get('username')
 		password=request.form.get('password')
 		shopid=request.form.get('shopid')
 		conn=sqlite3.connect('mxwg.db')
 		cur_login=conn.cursor()
-		sql_login='select username,password,shopid,ip,posdb_name,instance_name from user where username=? and password=? and shopid=?'
-# and (substr(ip,1,7)=? or ?=?)'
-		login_value=(username,password,shopid)
-#,ipmask,hdip)
+		sql_login='select username,password,shopid,ip,posdb_name,instance_name from user where username=? and password=? and shopid=? and (substr(ip,1,7)=? or ?)'
+		login_value=(username,password,shopid,ipmask,ifvip)
 		cur_login.execute(sql_login,login_value)
 		row=cur_login.fetchone()
 
@@ -153,7 +174,7 @@ def login():
 		conn.close()
 		if row==None:
 			msg='Login Failed!'
-			return render_template("login.html",username=username,myshop=myshop,msg=msg,ip=ip)
+			return render_template("login.html",username=username,myshop=myshop,msg=msg,ip=ip,ifvip=ifvip)
 		else:
 			posdb_name=str(row[4])
 			instance_name=str(row[5])
@@ -169,9 +190,6 @@ def login():
 			return response
 	else:	
 		return render_template('login.html',myshop=myshop)
-
-
-
 
 if __name__ == '__main__':
 	app.debug=True

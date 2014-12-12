@@ -15,7 +15,7 @@ curren_code='RMB'
 flag3='0'
 trainflag='1'
 
-def sum(dt,shopid):
+def sum_sale(dt,shopid):
 	db_name='mxwg.db'
 	conn=sqlite3.connect(db_name)
 	cur_pay=conn.cursor()
@@ -26,12 +26,23 @@ def sum(dt,shopid):
 	conn.close()
 	return pay_value
 
-def pay_ins(dt,shopid,pay_amount):	
+def sum_pay(dt,shopid):
+	db_name='mxwg.db'
+	conn=sqlite3.connect(db_name)
+	cur_pay=conn.cursor()
+	cur_pay.execute('select sum(pay_value) from pay_j where dt=? and shopid=?',(dt,shopid))
+	pay_today=cur_pay.fetchone()
+	pay_value=pay_today[0]
+	cur_pay.close()
+	conn.close()
+	return pay_value
+
+def pay_ins(dt,shopid,pay_amount,sheetid):	
 	pay_value=pay_amount
 	
 	reqtime=time.strftime('%H%M%S')
 	shopid=str(shopid).upper()
-	sheetid=shopid+str(dt)+str(reqtime)
+#	sheetid=shopid+str(dt)+str(reqtime)
 	
 	db_name='mxwg.db'
 	conn=sqlite3.connect(db_name)
