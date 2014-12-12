@@ -13,7 +13,7 @@ pay_type='C'
 curren_code='RMB'
 
 flag3='0'
-trainflag='1'
+trainflag='0'
 
 def sum_sale(dt,shopid):
 	db_name='mxwg.db'

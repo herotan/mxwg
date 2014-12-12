@@ -43,7 +43,7 @@ def input():
 		flag1='0'
 		flag2='0'
 		flag3='0'
-		trainflag='1'
+		trainflag='0'
 		
 		goodsid=request.form.get('goodsid')
 		vgno=goodsid

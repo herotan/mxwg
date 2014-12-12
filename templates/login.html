@@ -18,28 +18,15 @@
         <th scope="row"><div align="left">请选择您所在的门店:</div></th>
         <td><div align="left">
           <select name="shopid">
-            
-     
-        
       
 {% for shop in myshop %}
 
-      
-        
-          
             <option value={{shop.shopid}}> {{shop.mwid}}:{{shop.mwname}}</option>
             
-          
-        
-      
 {% endfor %}
 
 shopid:{{shopid}}
 
-
-    
-      
-        
           </select>
         </div></td>
       </tr>
@@ -64,6 +51,7 @@ shopid:{{shopid}}
 <br>
 <fieldset>
     <legend>信息框</legend>
+	<h1>现已是正式环境，请谨慎操作，有问题请联系信息部：王明明 </h1>
 <br>{{remsg}}
 <br>
 {{username}}
