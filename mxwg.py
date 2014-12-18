@@ -61,10 +61,6 @@ def input():
 			try:
 				float(value) + 1
 			except ValueError:
-#				try:
-#					pass
-#				except TypeError:
-#					return False
 				return False
 
 		if sales_amount_input=='' or isNum(sales_amount_input)==False or float(sales_amount_input)<=0 or len(sales_amount_input)>9:
