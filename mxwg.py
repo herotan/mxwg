@@ -63,17 +63,19 @@ def input():
 			except ValueError:
 				return False
 
-		if sales_amount_input=='' or isNum(sales_amount_input)==False or float(sales_amount_input)<=0 or len(sales_amount_input)>9:
+		if sales_amount_input=='' or isNum(sales_amount_input)==False or float(sales_amount_input)==0 or len(sales_amount_input)>9:
 			sales_amount=0
 			entries=entry.show(dt,shopid)
 			inputmsg="The input value not qualified"
 			sale_sum=pay.sum_sale(dt,shopid)	
 			pay_sum=pay.sum_pay(dt,shopid)
 			return render_template("input.html",inputmsg=inputmsg,pay_sum=pay_sum,sale_sum=sale_sum,username=username,shopid=shopid,sales_amount=sales_amount,time1=time1,dt=dt,ip=ip,entries=entries,goodsinfo=goodsinfo)
-		
+		if float(sales_amount_input)<0 :
+			item_type='r'
+
 		sales_amount=float(sales_amount_input)
 		item_value=sales_amount
-		price=item_value
+		price=abs(item_value)
 		sheetid=str(shopid)+str(dt)+str(reqtime)
 		
 		sql_value=(shopid,1001,dt,time1,reqtime,listno,sublistno,pos_id,cashier_id,vgno,goodsno,placeno,groupno,deptno,amount,item_value,disc_value,vipdisc_value,item_type,v_type,disc_type,x,flag1,flag2,flag3,trainflag,price,use_goodsno,sheetid)

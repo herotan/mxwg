@@ -41,6 +41,7 @@ def pay_ins(dt,shopid,pay_amount,sheetid):
 	pay_value=pay_amount
 	
 	reqtime=time.strftime('%H%M%S')
+	time1=time.strftime('%H:%M:%S')
 	shopid=str(shopid).upper()
 	
 	db_name='mxwg.db'
